@@ -1,0 +1,76 @@
+<main class="h-100">
+  <div class="window-mode-toggle-container">
+    <mat-button-toggle-group name="windowMode" aria-label="windowMode" [value]="windowMode()"
+      (change)="onWindowModeChange($event)">
+      <mat-button-toggle value="preview" [matTooltip]="modifierKeyPrefix + ' p review'">
+        <mat-icon aria-hidden="false" aria-label="preview">preview</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="edit" [matTooltip]="modifierKeyPrefix + ' e dit'">
+        <mat-icon aria-hidden="false" aria-label="edit">edit</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="vsplit" [matTooltip]="modifierKeyPrefix + ' v ertical_split'">
+        <mat-icon aria-hidden="false" aria-label="vertical_split">vertical_split</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="hsplit" [matTooltip]="modifierKeyPrefix + ' h orizontal_split'">
+        <mat-icon aria-hidden="false" aria-label="horizontal_split">horizontal_split</mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <div style="display: flex;" aria-label="action">
+      <button mat-mini-fab>
+        <mat-icon aria-hidden="false" aria-label="save" (click)="saveFile()"
+          [matTooltip]="modifierKeyPrefix + ' s ave'">save</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div>
+    @switch (windowMode()) {
+    @case ('preview') {
+    <div class="reveal h-100 w-100">
+      <div class="slides">
+        {{ content() }}
+      </div>
+    </div>
+    }
+
+    @case ('edit') {
+    <div class="editor-container h-100">
+      <ng-editor [content]="content()" [mode]="editorMode" [showGutter]="true" [height]="'100%'"
+        (editorContentChanged)="handleContentChange($event)"></ng-editor>
+    </div>
+    }
+
+    @case ('vsplit') {
+    <div style="display: flex;">
+      <div class="w-50 h-100">
+        <ng-editor [content]="content()" [mode]="editorMode" [showGutter]="true" [height]="'100%'"
+          (editorContentChanged)="handleContentChange($event)"></ng-editor>
+      </div>
+      <div class="reveal w-50 h-100">
+        <div class="slides">{{ content() }}</div>
+      </div>
+    </div>
+    }
+
+    @case ('hsplit') {
+    <div style="display: flex; flex-direction: column;">
+      <div class="reveal h-50 w-100">
+        <div class="slides">{{ content() }}</div>
+      </div>
+      <div class="h-50 w-100">
+        <ng-editor [content]="content()" [mode]="editorMode" [showGutter]="true" [height]="'100%'"
+          (editorContentChanged)="handleContentChange($event)"></ng-editor>
+      </div>
+    </div>
+    }
+
+    @default {
+    <div class="reveal h-100 w-100">
+      <div class="slides">{{ content() }}</div>
+    </div>
+    }
+    }
+  </div>
+
+</main>

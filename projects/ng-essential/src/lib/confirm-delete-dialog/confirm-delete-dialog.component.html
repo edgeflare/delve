@@ -1,0 +1,11 @@
+<mat-dialog-content class="mat-typography">
+  <h6>Type <b><code>{{ itemName }}</code></b> to delete {{ itemType }}</h6>
+  <mat-form-field appearance="outline">
+    <input matInput [(ngModel)]="confirmationInput" aria-label="Name to confirm deletion">
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close cdkFocusInitial>CANCEL</button>
+  <button mat-raised-button class="warn-button" [disabled]="confirmationInput !== itemName"
+    (click)="confirmDelete()">CONFIRM</button>
+</mat-dialog-actions>

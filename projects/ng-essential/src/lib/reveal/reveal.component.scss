@@ -1,0 +1,40 @@
+.window-mode-toggle-container {
+  position: absolute;
+  /* Position the element absolutely within its nearest positioned ancestor */
+  top: 4rem;
+  /* 16px = 4rem (1rem = 4px in Tailwind's default configuration) */
+  right: 0;
+  /* Position the element at the right edge of its container */
+  z-index: 10;
+  /* Set the stacking order (higher z-index means it appears on top) */
+  padding: 1rem;
+  /* Add 1rem (4px) of padding on all sides */
+  display: flex;
+  /* Use flexbox layout */
+  gap: 0.5rem;
+  /* Create a 0.5rem (2px) gap between flex items */
+}
+
+// centers the only child vertically and horizontally
+.center {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.h-100 {
+  height: calc(100vh - 4rem);
+}
+
+.h-50 {
+  height: calc(50vh - 2rem);
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.w-50 {
+  width: 50%;
+}

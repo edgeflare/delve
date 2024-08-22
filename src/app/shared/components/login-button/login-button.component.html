@@ -1,0 +1,16 @@
+<div>
+  @if (!isAuthenticated()) {
+  <button mat-button (click)="login()">Login</button>
+  }
+  @else if (isAuthenticated()) {
+  <div>
+    <button mat-button [matMenuTriggerFor]="menu">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item routerLink="/account">Account</button>
+      <button mat-menu-item (click)="logout()">Logout</button>
+    </mat-menu>
+  </div>
+  }
+</div>

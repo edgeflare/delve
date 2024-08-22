@@ -1,0 +1,49 @@
+<mat-sidenav-container class="h-100vh">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset() === true) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset()) ? 'over' : 'side'" [opened]="(isHandset()) === false">
+    <mat-toolbar class="bg-primary"> <!-- TODO: implement -->
+      <span class="flex-grow flex-shrink basis-auto"></span>
+      @if (isHandset() === true) {
+      <button mat-icon-button (click)="drawer.toggle()">
+        <mat-icon color="">close</mat-icon>
+      </button>
+      }
+    </mat-toolbar>
+    <mat-nav-list>
+      @for (route of sideNavRoutes(); track route) {
+      <a mat-list-item [routerLink]="route.path">
+        <span style="display: flex; align-items: center;">
+          <mat-icon>{{ route.avatar }}</mat-icon> &nbsp;
+          <span>{{ route.name }}</span>
+        </span>
+      </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <div class="flex items-center">
+        <button mat-icon-button (click)="drawer.toggle()">
+          @if (!drawer.opened) {
+          <mat-icon aria-label="Side nav toggle icon" color="">menu</mat-icon>
+          } @else if (drawer.opened) {
+          <mat-icon color="secondary">close</mat-icon>
+          }
+        </button> &nbsp;
+        <button [routerLink]="topNavRoutes()[0].path" mat-flat-button color="primary">
+          <span class="text-lg">
+            {{ topNavRoutes()[0].name }}
+          </span>
+        </button>
+      </div>
+
+      <span class="flex-grow flex-shrink basis-auto"></span>
+
+      <e-login-button></e-login-button>
+
+    </mat-toolbar>
+    <!-- contents -->
+    <router-outlet />
+    <!-- end contents -->
+  </mat-sidenav-content>
+</mat-sidenav-container>

@@ -1,0 +1,34 @@
+// Import Angular Material
+@use '@angular/material' as mat;
+
+// Define the button theme
+$warn-theme: mat.define-theme((color: (primary: mat.$rose-palette)));
+
+// Mixin for button color based on the theme
+@mixin button-color($color-variant) {
+  @include mat.button-color($warn-theme, $color-variant: $color-variant);
+}
+
+// Button styles
+.warn-button {
+  @include button-color(primary);
+}
+
+.accent-button {
+  @include button-color(secondary);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+// centers the only child vertically and horizontally
+.center {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

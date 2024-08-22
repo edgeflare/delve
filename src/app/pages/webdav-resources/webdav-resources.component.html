@@ -1,0 +1,57 @@
+<div class="m-4 flex justify-end gap-2">
+  <input type="file" (change)="uploadFile($event)" style="display: none" #fileInput>
+  <button mat-flat-button color="primary" class="w-32" (click)="fileInput.click()">
+    <mat-icon>upload</mat-icon>
+    <span>UPLOAD</span>
+  </button>
+
+  <button mat-flat-button color="primary" class="w-32" (click)="createFile()">
+    <mat-icon>add</mat-icon>
+    <span>CREATE</span>
+  </button>
+</div>
+
+@if (resources$ | async) {
+<div class="p-4">
+  <ng-expandable-table [data]="(resources$ | async) || []" [columns]="columns" [cellDefs]="cellDefs"
+    [expandedDetailContent]="customDetailTemplate" (currentRowChanged)="handleRowChange($event)"
+    [pageSizeOptions]="[20, 50, 100]">
+  </ng-expandable-table>
+
+  <ng-template #customDetailTemplate let-rowData>
+    @if (rowData) {
+    <div class="element-description">
+      <div class="flex flex-wrap gap-4 p-2">
+        <button mat-raised-button color="primary" (click)="toggleDetails()">
+          <mat-icon>data_object</mat-icon>
+          <span>DETAILS</span>
+        </button>
+
+        <!-- [routerLink]="[rowData.name, 'preview']" -->
+        <button mat-raised-button [disabled]="!isTextFile(rowData.contentType)"
+          (click)="reloadWindow('/delve/' + rowData.name + '/preview')">
+          <mat-icon>preview</mat-icon>
+          <span>PREVIEW</span>
+        </button>
+
+        <button mat-raised-button [disabled]="!isTextFile(rowData.contentType)"
+          (click)="reloadWindow('/delve/' + rowData.name + '/edit')">
+          <mat-icon>edit</mat-icon>
+          <span>EDIT</span>
+        </button>
+
+      </div>
+
+      @if (isShowDetails) {
+      <ng-editor [content]="rowData | json" [mode]="'json'" [isReadOnly]="true" [showGutter]="false" [height]="'12rem'">
+      </ng-editor>
+      }
+    </div>
+    }
+  </ng-template>
+</div>
+} @else {
+<div class="center">
+  <mat-spinner></mat-spinner>
+</div>
+}
