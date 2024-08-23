@@ -1,19 +1,26 @@
 # `delve`: for developers to create/share slides, charts in plain text
 
-## Built with
+If you're reading this, you probably hate the likes of MS Office, and are familiar with:
+
 - [reveal.js](https://revealjs.com/) for slides with markdown,mermaid etc supported by reveal itself
 - [echarts](https://echarts.apache.org) using [ngx-echarts](https://xieziyu.github.io/ngx-echarts/) for charts
 - [ace](https://github.com/ajaxorg/ace) for code editor
-- [Angular](https://angular.io) for frontend
 
-## let's `delve` in
+delve integrates the above tools, and simple a WebDAV server for remote access, in a zero-dependency Go binary with the WebUI, written in [Angular](https://angular.io), embedded in it. It runs on Linux, Windows, macOS, and as container.
+
+## let's `delve` into...
 
 ```shell
 git clone https://github.com/edgeflare/delve.git && cd delve
-npm install && npx ng build ng-essential
-go mod tidy
-go run .
-npx ng serve
+make build-darwin-arm64 # or make build-linux-amd64, make build-windows-amd64, etc. see Makefile
+./bin/delve # ./bin/delve --help for available options
+```
+
+or as container
+
+```shell
+make container CONTAINER_RUNTIME=podman # or docker
+podman run -p 8080:8080 -v $PWD:/webdav edgeflare/delve --dir=/webdav # or use docker
 ```
 
 |                                                          |                                                   |
@@ -47,4 +54,4 @@ This is a simple Go WebDAV server implementation using the `golang.org/x/net/web
 
 
 ## Development/Contributing
-If you're reading this, you probably hate MS Office and the likes. I decided to spend a weekend to bring the above tools in one place with a webdav fileserver. It has basic-auth, keyboard shortcuts for saving, switching preview, edit, and split view. Feel free to chip-in.
+Feel free to chip-in, if you have any ideas, suggestions, or issues, please open an issue or PR.

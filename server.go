@@ -1,18 +1,28 @@
 package main
 
 import (
+	"bytes"
+	"embed"
 	"flag"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 
 	mw "github.com/edgeflare/pgo/middleware"
 	"golang.org/x/net/webdav"
 )
 
+// embeddedFS holds the embedded Angular application files
+//
+//go:embed dist/delve-webui/browser
+var embeddedFS embed.FS
+
 func main() {
+	// Parse command-line flags for configuration
 	prefix := flag.String("prefix", "/webdav/", "WebDAV prefix")
 	dir := flag.String("dir", ".", "WebDAV directory")
 	allowedOrigins := flag.String("origins", "*", "Allowed origins (comma-separated)")
@@ -22,15 +32,16 @@ func main() {
 	port := flag.String("port", "8080", "Port to listen on")
 	logger := flag.Bool("logger", false, "Enable request logging")
 	basicAuth := flag.String("basic-auth", "", "Basic auth credentials in the format username:password (comma-separated for multiple users)")
-
 	flag.Parse()
 
+	// Validate command-line arguments
 	if flag.NArg() > 0 {
 		fmt.Println("Unexpected arguments provided")
 		flag.Usage()
 		os.Exit(1)
 	}
 
+	// Create WebDAV handler
 	webdavHandler := &webdav.Handler{
 		Prefix:     *prefix,
 		FileSystem: webdav.Dir(*dir),
@@ -42,6 +53,7 @@ func main() {
 		},
 	}
 
+	// Configure CORS options for WebDAV
 	webdavCorsOptions := &mw.CORSOptions{
 		AllowedOrigins:   strings.Split(*allowedOrigins, ","),
 		AllowedMethods:   strings.Split(*allowedMethods, ","),
@@ -49,9 +61,10 @@ func main() {
 		AllowCredentials: *allowCredentials,
 	}
 
+	// Initialize middleware chain
 	var middlewares []func(http.Handler) http.Handler
 
-	// Apply CORS middleware
+	// Apply CORS middleware to WebDAV handler
 	middlewares = append(middlewares, mw.CORSWithOptions(webdavCorsOptions))
 
 	// Apply logger middleware if enabled
@@ -74,20 +87,69 @@ func main() {
 		middlewares = append(middlewares, mw.VerifyBasicAuth(creds))
 	}
 
-	// Register all middlewares
+	// Register and apply middlewares to WebDAV handler
 	mw.Register(mw.RequestID)
 	for _, middleware := range middlewares {
 		mw.Register(middleware)
 	}
-
 	handler := mw.Apply(webdavHandler)
 
+	// Create HTTP request multiplexer
 	mux := http.NewServeMux()
+
+	// Handle WebDAV requests
 	mux.Handle(*prefix, handler)
 
-	// Start the server using the ServeMux
+	// Serve Angular app from embedded filesystem
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// Serve index.html for the root path or non-file requests (handled by Angular routing)
+		if r.URL.Path == "/" || !strings.Contains(r.URL.Path[1:], ".") {
+			http.ServeFile(w, r, "dist/delve-webui/browser/index.html")
+			return
+		}
+
+		// Serve other files from the embedded filesystem
+		filePath := filepath.Join("dist/delve-webui/browser", r.URL.Path)
+		serveEmbeddedFile(w, r, filePath)
+	})
+
+	// Start the server
 	log.Printf("Starting WebDAV server on :%s", *port)
 	if err := http.ListenAndServe(":"+*port, mux); err != nil {
 		log.Fatalf("Server failed to start: %v", err)
 	}
+}
+
+// serveEmbeddedFile serves a file from the embedded file system with appropriate content type and handling for missing files
+func serveEmbeddedFile(w http.ResponseWriter, r *http.Request, filePath string) {
+	fileData, err := fs.ReadFile(embeddedFS, filePath)
+	if err != nil {
+		if os.IsNotExist(err) {
+			// If the file doesn't exist, serve index.html to let Angular handle routing
+			http.ServeFile(w, r, "dist/delve-webui/browser/index.html")
+		} else {
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+		return
+	}
+
+	// Get file info to access modification time
+	fileInfo, err := fs.Stat(embeddedFS, filePath)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Set Content-Type header based on file extension
+	ext := filepath.Ext(filePath)
+	switch ext {
+	case ".js":
+		w.Header().Set("Content-Type", "application/javascript")
+	case ".css":
+		w.Header().Set("Content-Type", "text/css")
+	case ".html":
+		w.Header().Set("Content-Type", "text/html")
+	}
+
+	http.ServeContent(w, r, filePath, fileInfo.ModTime(), bytes.NewReader(fileData))
 }
