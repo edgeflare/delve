@@ -6,7 +6,7 @@ If you're reading this, you probably hate the likes of MS Office, and are famili
 - [echarts](https://echarts.apache.org) using [ngx-echarts](https://xieziyu.github.io/ngx-echarts/) for charts
 - [ace](https://github.com/ajaxorg/ace) for code editor
 
-delve integrates the above tools, and simple a WebDAV server for remote access, in a zero-dependency Go binary with the WebUI, written in [Angular](https://angular.io), embedded in it. It runs on Linux, Windows, macOS, and as container.
+delve integrates the above tools, and a simple WebDAV server for remote access/editing, in a zero-dependency Go binary that embeds a WebUI written in [Angular](https://angular.io). It runs on Linux, Windows, macOS, and as container. editor isn't really robust (ace itself is great but we're not leveraging its capabilities); can be used for typo fixes etc.
 
 ## let's `delve` in...
 
@@ -19,8 +19,8 @@ make build-darwin-arm64 # or make build-linux-amd64, make build-windows-amd64, e
 or as container
 
 ```shell
-make container CONTAINER_RUNTIME=podman # or docker
-podman run -p 8080:8080 -v $PWD:/webdav edgeflare/delve --dir=/webdav # or use docker
+make image # or make image CONTAINER_RUNTIME=podman, to use podman runtime
+docker run -p 8080:8080 -v $PWD:/webdav edgeflare/delve --dir=/webdav # or podman run ...
 ```
 
 |                                                          |                                                   |
@@ -52,14 +52,13 @@ This is a simple Go WebDAV server implementation using the `golang.org/x/net/web
 
 **Note:** Replace placeholders like `<lock-token>` with actual values.
 
-
 ## Development/Contributing
 Feel free to chip-in, if you have any ideas, suggestions, or issues, please open an issue or PR.
 
 ```shell
 git clone https://github.com/edgeflare/delve.git && cd delve
 npm install && npx ng build ng-essential
-npx nx serve delve
+npx ng build --watch ## to serve with go. or ng serve
 go mod tidy
 go run .
 ```

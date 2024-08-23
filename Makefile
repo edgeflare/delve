@@ -60,7 +60,7 @@ podman:
 	@podman build -t $(IMAGE_NAME) .
 
 # Build container image using the selected container runtime (Docker or Podman)
-container:
+image:
 	@echo "Building container image with $(CONTAINER_RUNTIME)..."
 	@$(CONTAINER_RUNTIME) build -t $(IMAGE_NAME) .
 

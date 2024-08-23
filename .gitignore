@@ -43,3 +43,6 @@ bin/*
 # System files
 .DS_Store
 Thumbs.db
+
+# local files
+__*

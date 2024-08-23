@@ -4,7 +4,7 @@ WORKDIR /ui
 COPY package.json package-lock.json .
 RUN npm ci
 COPY . .
-RUN npm install && npx ng build ng-essential && npx ng build
+RUN npx ng build ng-essential && npx ng build
 
 # Build go
 FROM docker.io/golang:1.23.0-alpine3.20 as BUILDER

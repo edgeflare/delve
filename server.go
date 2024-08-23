@@ -104,7 +104,7 @@ func main() {
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// Serve index.html for the root path or non-file requests (handled by Angular routing)
 		if r.URL.Path == "/" || !strings.Contains(r.URL.Path[1:], ".") {
-			http.ServeFile(w, r, "dist/delve-webui/browser/index.html")
+			serveEmbeddedFile(w, r, "dist/delve-webui/browser/index.html")
 			return
 		}
 
@@ -124,13 +124,13 @@ func main() {
 func serveEmbeddedFile(w http.ResponseWriter, r *http.Request, filePath string) {
 	fileData, err := fs.ReadFile(embeddedFS, filePath)
 	if err != nil {
-		if os.IsNotExist(err) {
-			// If the file doesn't exist, serve index.html to let Angular handle routing
-			http.ServeFile(w, r, "dist/delve-webui/browser/index.html")
-		} else {
+		// Serve index.html for any error, including 404
+		fileData, err = fs.ReadFile(embeddedFS, "dist/delve-webui/browser/index.html")
+		if err != nil {
 			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
 		}
-		return
+		filePath = "dist/delve-webui/browser/index.html" // Update filePath for content-type
 	}
 
 	// Get file info to access modification time
@@ -149,6 +149,16 @@ func serveEmbeddedFile(w http.ResponseWriter, r *http.Request, filePath string) 
 		w.Header().Set("Content-Type", "text/css")
 	case ".html":
 		w.Header().Set("Content-Type", "text/html")
+	case ".png":
+		w.Header().Set("Content-Type", "image/png")
+	case ".jpg", ".jpeg":
+		w.Header().Set("Content-Type", "image/jpeg")
+	case ".svg":
+		w.Header().Set("Content-Type", "image/svg+xml")
+	case ".json":
+		w.Header().Set("Content-Type", "application/json")
+	default:
+		w.Header().Set("Content-Type", "application/octet-stream")
 	}
 
 	http.ServeContent(w, r, filePath, fileInfo.ModTime(), bytes.NewReader(fileData))
