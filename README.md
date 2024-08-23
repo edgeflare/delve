@@ -8,7 +8,7 @@ If you're reading this, you probably hate the likes of MS Office, and are famili
 
 delve integrates the above tools, and simple a WebDAV server for remote access, in a zero-dependency Go binary with the WebUI, written in [Angular](https://angular.io), embedded in it. It runs on Linux, Windows, macOS, and as container.
 
-## let's `delve` into...
+## let's `delve` in...
 
 ```shell
 git clone https://github.com/edgeflare/delve.git && cd delve
@@ -25,7 +25,7 @@ podman run -p 8080:8080 -v $PWD:/webdav edgeflare/delve --dir=/webdav # or use d
 
 |                                                          |                                                   |
 |----------------------------------------------------------|---------------------------------------------------|
-| ![webdav-resources](./public/img/webdav-resources.png)   | ![postgres-arch](./public/img/postgres-arch.png)  |
+| ![webdav-resources](./public/img/webdav-resources.png)   | ![postgres-arch](./public/img/postgres-arch-mermaid.png)  |
 | ![ace-reveal-vsplit](./public/img/ace-reveal-vsplit.png) | ![echarts-tree](./public/img/echarts-tree.png)    |
 
 ## WebDAV Server
@@ -55,3 +55,11 @@ This is a simple Go WebDAV server implementation using the `golang.org/x/net/web
 
 ## Development/Contributing
 Feel free to chip-in, if you have any ideas, suggestions, or issues, please open an issue or PR.
+
+```shell
+git clone https://github.com/edgeflare/delve.git && cd delve
+npm install && npx ng build ng-essential
+npx nx serve delve
+go mod tidy
+go run .
+```

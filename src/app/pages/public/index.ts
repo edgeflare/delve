@@ -7,7 +7,8 @@ import { NavComponent } from "@app/shared/components";
 
 export const PUBLIC_ROUTES: Routes = [
   {
-    path: '', component: NavComponent,
+    path: '',
+    // component: NavComponent, // 100vh reveal height
     children: [
       { path: 'about-delve', component: AboutComponent },
       { path: 'community', component: CommunityComponent },

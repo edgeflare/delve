@@ -1,7 +1,7 @@
 .window-mode-toggle-container {
   position: absolute;
   /* Position the element absolutely within its nearest positioned ancestor */
-  top: 4rem;
+  top: 2rem;
   /* 16px = 4rem (1rem = 4px in Tailwind's default configuration) */
   right: 0;
   /* Position the element at the right edge of its container */
@@ -24,17 +24,17 @@
 }
 
 .h-100 {
-  height: calc(100vh - 4rem);
+  height: calc(100vh);
 }
 
 .h-50 {
-  height: calc(50vh - 2rem);
+  height: calc(50vh);
 }
 
 .w-100 {
-  width: 100%;
+  width: 100vw;
 }
 
 .w-50 {
-  width: 50%;
+  width: 50vw;
 }

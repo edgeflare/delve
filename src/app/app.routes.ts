@@ -7,12 +7,12 @@ import { NavComponent } from './shared/components';
  */
 export const routes: Routes = [
   {
-    path: 'home',
+    path: 'demo',
     loadChildren: () => import('./pages/public').then((m) => m.PUBLIC_ROUTES),
   },
   {
     path: '',
-    component: NavComponent,            // top navbar
+    // component: NavComponent,            // top navbar
     children: [
       {
         path: 'delve',

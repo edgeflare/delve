@@ -17,7 +17,7 @@ export class HomeComponent {
   modifierKeyPrefix = this.platformService.modifierKeyPrefix;
 
   content = signal(`
-<section class="center">
+<section>
   <p>PostgreSQL Architecture</p>
   <div class="mermaid center" style="height: 50vh;">graph TD
     subgraph PostgreSQL_Architecture
