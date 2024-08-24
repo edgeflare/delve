@@ -12,5 +12,6 @@ export { RevealComponent } from './lib/reveal/reveal.component';
 export { PlatformService } from './lib/core';
 
 export type { WindowMode, WebdavResource, ConfirmDeleteDialogData } from './lib/types';
+export { MermaidComponent } from './lib/mermaid/mermaid.component';
 
 // export { MQTTService, MQTT_CONFIG_TOKEN } from './lib/mqtt/mqtt.service';

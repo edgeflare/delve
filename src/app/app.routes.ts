@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { NavComponent } from './shared/components';
+// import { NavComponent } from './shared/components';
 // import { ChartComponent } from './pages/chart/chart.component';
 
 /**
@@ -9,6 +9,10 @@ export const routes: Routes = [
   {
     path: 'demo',
     loadChildren: () => import('./pages/public').then((m) => m.PUBLIC_ROUTES),
+  },
+  {
+    path: 'mermaid',
+    loadComponent: () => import('./pages/mermaid-editor/mermaid-editor.component').then((m) => m.MermaidEditorComponent),
   },
   {
     path: '',
