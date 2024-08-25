@@ -51,7 +51,8 @@
               "src/styles.scss",
               "node_modules/vanilla-cookieconsent/dist/cookieconsent.css",
               "node_modules/reveal.js/dist/reveal.css",
-              "node_modules/reveal.js/dist/theme/solarized.css"
+              "node_modules/reveal.js/dist/theme/solarized.css",
+              "node_modules/reveal.js/plugin/highlight/monokai.css"
             ],
             "scripts": [
               "public/matomo.js"

@@ -1,0 +1,59 @@
+<main class="h-100">
+  <div class="window-mode-toggle-container">
+    <mat-button-toggle-group name="windowMode" aria-label="windowMode" [value]="windowMode()"
+      (change)="onWindowModeChange($event)">
+      <mat-button-toggle value="preview" [matTooltip]="modifierKeyPrefix + ' p review'">
+        <mat-icon aria-hidden="false" aria-label="preview">preview</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="edit" [matTooltip]="modifierKeyPrefix + ' e dit'">
+        <mat-icon aria-hidden="false" aria-label="edit">edit</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="vsplit" [matTooltip]="modifierKeyPrefix + ' Shift+V ertical_split'">
+        <mat-icon aria-hidden="false" aria-label="vertical_split">vertical_split</mat-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="hsplit" [matTooltip]="modifierKeyPrefix + ' h orizontal_split'">
+        <mat-icon aria-hidden="false" aria-label="horizontal_split">horizontal_split</mat-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <div style="display: flex;" aria-label="action">
+      <button mat-mini-fab>
+        <mat-icon aria-hidden="false" aria-label="save" (click)="saveFile()"
+          [matTooltip]="modifierKeyPrefix + ' s ave'">save</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <div>
+    @switch (windowMode()) {
+    @case ('preview') {
+    <ng-reveal2 [content]="content" [height]="editorHeight" [width]="editorWidth"></ng-reveal2>
+    }
+    @case ('edit') {
+    <ng-editor [content]="content" [height]="editorHeight" [width]="editorWidth"
+      (editorContentChanged)="onEditorContentChanged($event)"></ng-editor>
+    }
+    @case ('hsplit') {
+    <div style="display: flex; flex-direction: column; height: 100vh;">
+      <ng-editor [content]="content" [height]="'50vh'" [width]="editorWidth"
+        (editorContentChanged)="onEditorContentChanged($event)"></ng-editor>
+      <ng-reveal2 [content]="content" [height]="'50vh'" [width]="editorWidth"></ng-reveal2>
+    </div>
+    }
+    @case ('vsplit') {
+    <div style="display: flex; height: 100vh;">
+      <ng-editor [content]="content" [height]="editorHeight" [width]="'50vw'"
+        (editorContentChanged)="onEditorContentChanged($event)"></ng-editor>
+      <ng-reveal2 [content]="content" [height]="editorHeight" [width]="'50vw'"></ng-reveal2>
+    </div>
+    }
+    @default {
+    <div style="display: flex; flex-direction: column; height: 100vh;">
+      <ng-editor [content]="content" [height]="'100vh'" [width]="editorWidth"
+        (editorContentChanged)="onEditorContentChanged($event)"></ng-editor>
+      <ng-reveal2 [content]="content" [height]="'100vh'" [width]="editorWidth"></ng-reveal2>
+    </div>
+    }
+    }
+  </div>
+</main>

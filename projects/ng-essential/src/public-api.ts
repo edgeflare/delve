@@ -9,6 +9,7 @@ export { WebdavService } from './lib/webdav/webdav.service';
 export { WEBDAV_BASE_URL } from './lib/webdav/webdav-url.token';
 
 export { RevealComponent } from './lib/reveal/reveal.component';
+export { Reveal2Component } from './lib/reveal2/reveal2.component';
 export { PlatformService } from './lib/core';
 
 export type { WindowMode, WebdavResource, ConfirmDeleteDialogData } from './lib/types';

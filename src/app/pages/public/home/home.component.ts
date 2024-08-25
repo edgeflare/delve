@@ -1,21 +1,15 @@
-import { Component, inject, signal } from '@angular/core';
-import { PlatformService } from '@app/core';
-import { RevealComponent } from 'ng-essential';
+import { Component, signal } from '@angular/core';
+import { Reveal2Component } from 'projects/ng-essential/src/lib/reveal2/reveal2.component';
 
 @Component({
   selector: 'e-home',
   standalone: true,
-  imports: [RevealComponent],
+  imports: [Reveal2Component],
   template: `
-  <ng-reveal [content]="content" [editorMode]="'html'"></ng-reveal>
-  <!-- <p>If you see this, then maybe Reveal isn't properly initialized. Try refreshing the page {{ modifierKeyPrefix }} + R.</p> -->
+  <ng-reveal2 [content]="content()"></ng-reveal2>
   `,
 })
 export class HomeComponent {
-  private platformService = inject(PlatformService);
-
-  modifierKeyPrefix = this.platformService.modifierKeyPrefix;
-
   content = signal(`
 <section>
   <p>PostgreSQL Architecture</p>
@@ -100,7 +94,15 @@ export class HomeComponent {
 </section>
 
 <section>
-  <section>Vertical Slide 1</section>
+  <section>
+    <pre><code data-trim data-noescape>
+  (def lazy-fib
+    (concat
+     [0 1]
+     ((fn rfib [a b]
+          (lazy-cons (+ a b) (rfib b (+ a b)))) 0 1)))
+    </code></pre>
+  </section>
   <section>Vertical Slide 2</section>
 </section>
 `

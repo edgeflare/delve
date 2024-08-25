@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-// import { NavComponent } from './shared/components';
-// import { ChartComponent } from './pages/chart/chart.component';
 
 /**
  * Defines the main routes for the application.
@@ -20,19 +18,21 @@ export const routes: Routes = [
     children: [
       {
         path: 'delve',
-        // canActivate: [authGuard],    // Uncomment to protect the 'delve' section with authentication
+        // canActivate: [authGuard],       // Uncomment to protect the 'delve' section with authentication
         children: [
           {
-            path: '',                   // List of files in WebDAV
+            path: '',                      // List of files in WebDAV
             loadComponent: () => import('./pages/webdav-resources').then((m) => m.WebdavResourcesComponent),
             title: 'Delve Resources'
           },
           {
-            path: ':filename',          // Specific file within WebDAV
+            path: ':filename',             // Specific file within WebDAV
             children: [
               {
                 path: ':mode',
-                loadComponent: () => import('./pages/delve').then((m) => m.DelveComponent),
+                // loadComponent: () => import('./pages/delve').then((m) => m.DelveComponent),
+                // experimening with a more modular, Angular way. pluggins not working
+                loadComponent: () => import('./pages/reveal-editor/reveal-editor.component').then((m) => m.RevealEditorComponent),
                 title: 'Delve Editor'
               },
             ],
